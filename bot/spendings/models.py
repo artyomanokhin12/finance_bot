@@ -9,5 +9,6 @@ class Spendings(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     spendings_name: Mapped[str]
+    optional_spending: Mapped[bool]
 
     bank = relationship('Bank', back_populates='spendings')

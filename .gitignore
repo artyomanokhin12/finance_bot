@@ -2,3 +2,4 @@
 .env
 alembic.ini
 bot/migrations/
+**/__pycache__/
