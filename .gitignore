@@ -1,5 +1,8 @@
 .venv/
 .env
 alembic.ini
-bot/migrations/
+app/migrations/
 **/__pycache__
+db.sql
+app/handlers/test_handlers.py
+test.py

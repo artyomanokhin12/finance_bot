@@ -1,13 +1,13 @@
 from sqlalchemy import Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import relationship
 
-from bot.database import Base
-
-from bot.bank.models import Bank
+from app.database import Base
+from app.incomes_bank.models import IncomesBank
+from app.spendings_bank.models import SpendingsBank
 
 
 class Users(Base):
-
     __tablename__ = 'users'
 
     id: Mapped[int] = mapped_column(
@@ -16,11 +16,13 @@ class Users(Base):
         autoincrement=False, 
         nullable=False
         )
-    limit: Mapped[int | None] = mapped_column(Numeric)
+    users_limit: Mapped[int | None] = mapped_column(Numeric)
     current_balance: Mapped[int | None] = mapped_column(Numeric)
     blocked: Mapped[bool | None]
 
-    bank = relationship('Bank', back_populates='users')
+    spendings_bank: Mapped[list['SpendingsBank']] = relationship()
+    incomes_bank: Mapped[list['IncomesBank']] = relationship()
+
 
     def __repr__(self):
-        return f'User={self.id=}'
+        return f'User={self.id}'

@@ -4,8 +4,8 @@ from aiogram.fsm.state import default_state
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from bot.state import FSMInputLimit
-from bot.users.dao import UsersDAO
+from app.state import FSMInputLimit
+from app.users.dao import UsersDAO
 
 
 router = Router()
@@ -61,8 +61,11 @@ async def final_input_limit(message: Message, state: FSMContext):
     await state.update_data(limit=message.text)
     data = await state.get_data()
     print(data['limit'])
-    await UsersDAO.update(
+    await UsersDAO.update_by_id(
         id=message.from_user.id,
-        limit=data['limit'],
+        users_limit=data['limit'],
     )
     await state.clear()
+    await message.answer(
+        'Вы успешно добавили свой месячный лимит!'
+    )

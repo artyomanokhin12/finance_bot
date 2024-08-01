@@ -3,12 +3,13 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import Redis, RedisStorage
 
-from bot.config import settings
+from app.config import settings
 
-from bot.handlers.start_commands import router as start_router
-from bot.handlers.spendings import router as spendings_router
-from bot.handlers.other_handlers import router as other_router
-from bot.handlers.cancel_command import router as cancel_router
+from app.handlers.start_commands import router as start_router
+from app.handlers.spendings import router as spendings_router
+from app.handlers.other_handlers import router as other_router
+from app.handlers.cancel_command import router as cancel_router
+from app.handlers.test_handlers import router as test_handlers
 
 async def main():
 
@@ -18,6 +19,7 @@ async def main():
     dp = Dispatcher(storage=storage)
 
     dp.include_router(router=cancel_router)
+    dp.include_router(router=test_handlers)
     dp.include_router(router=start_router)
     dp.include_router(router=spendings_router)
     dp.include_router(router=other_router)
