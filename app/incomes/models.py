@@ -6,8 +6,7 @@ class Incomes(Base):
     __tablename__ = 'incomes'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    incomes_name: Mapped[str]
-    ru_incomes_name: Mapped[str | None]
+    incomes_name: Mapped[str | None]
 
     def __repr__(self):
-        return self.incomes_name
+        return self.ru_incomes_name

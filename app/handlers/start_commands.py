@@ -60,7 +60,6 @@ async def final_input_limit(message: Message, state: FSMContext):
 
     await state.update_data(limit=message.text)
     data = await state.get_data()
-    print(data['limit'])
     await UsersDAO.update_by_id(
         id=message.from_user.id,
         users_limit=data['limit'],

@@ -13,6 +13,7 @@ class SpendingsBank(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_fk: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='RESTRICT'))
     spending_fk = mapped_column(ForeignKey('spendings.id'))
+    amount: Mapped[float]
     operation_date: Mapped[datetime.datetime] = mapped_column(server_default=text('now()'))
 
     spendings: Mapped['Spendings'] = relationship()

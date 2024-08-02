@@ -8,7 +8,7 @@ router = Router()
 
 
 @router.message(Command(commands=['spending']))
-async def spending_command(message: Message):
+async def spending_command(message: Message) -> None:
     await message.answer(
         'Пожалуйста, выберите тип расхода',
         reply_markup = await spendings_buttons()

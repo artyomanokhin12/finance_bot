@@ -6,32 +6,38 @@ from app.spendings.models import Spendings
 from app.incomes.dao import IncomesDAO
 from app.incomes.models import Incomes
 
+
+async def get_all_incomes() -> list[Incomes]:
+    return await IncomesDAO.find_all()
+
+async def get_all_spendings() -> list[Spendings]:
+    return await SpendingsDAO.find_all()
+
 async def spendings_buttons() -> InlineKeyboardMarkup:
     """ Функция создания инлайн-кнопок расходов """
     buttons = []
-    categories: list[Spendings] = await SpendingsDAO.find_all()
+    categories: list[Spendings] = await get_all_spendings()
     kb_builder = InlineKeyboardBuilder()
     for category in categories:
         buttons.append(
             InlineKeyboardButton(
-                text=category.ru_spending_name,
-                callback_data=category.spendings_name,
+                text=category.spending_name,
+                callback_data=str(category.id),
             )
         )
     kb_builder.row(*buttons, width=3)
     return kb_builder.as_markup()
 
-
 async def incomes_buttons() -> InlineKeyboardMarkup:
-    """ Функция создания инлайн-кнопок расходов """
+    """ Функция создания инлайн-кнопок доходов """
     buttons = []
-    categories: list[Incomes] = await IncomesDAO.find_all()
+    categories: list[Incomes] = await get_all_incomes()
     kb_builder = InlineKeyboardBuilder()
     for category in categories:
         buttons.append(
             InlineKeyboardButton(
-                text=category.ru_incomes_name,
-                callback_data=category.incomes_name,
+                text=category.incomes_name,
+                callback_data=str(category.id),
             )
         )
     kb_builder.row(*buttons, width=3)

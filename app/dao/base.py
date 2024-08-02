@@ -34,6 +34,7 @@ class BaseDAO:
             stmt = insert(cls.model).values(**data)
             await session.execute(stmt)
             await session.commit()
+            return True
 
     @classmethod
     async def update_by_id(cls, id: int, **data):
