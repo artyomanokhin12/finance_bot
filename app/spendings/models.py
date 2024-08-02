@@ -8,7 +8,8 @@ class Spendings(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     spendings_name: Mapped[str]
+    ru_spending_name: Mapped[str | None]
     optional_spending: Mapped[bool]
 
-    def __repr__(self):
-        return self.spendings_name
+    def __repr__(self) -> str:
+        return self.ru_spending_name
