@@ -14,6 +14,7 @@ from app.handlers.incomes import router as incomes_router
 from app.handlers.other_handlers import router as other_router
 from app.handlers.cancel_command import router as cancel_router
 from app.handlers.test_handlers import router as test_handlers
+from app.menu import set_main_menu
 
 async def main():
 
@@ -29,6 +30,7 @@ async def main():
     dp.include_router(router=incomes_router)
     dp.include_router(router=other_router)
 
+    await set_main_menu(bot)
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
