@@ -5,6 +5,7 @@ from aiogram.filters import Command, StateFilter
 from aiogram.fsm.state import default_state
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
+from sqlalchemy.exc import IntegrityError, CompileError
 
 from app.incomes_bank.dao import IncomesBankDAO
 from app.inline_keyboards.incomes_spendings_keyboard import incomes_buttons
@@ -26,7 +27,7 @@ async def incomes_command(message: Message, state: FSMContext):
 async def incomes_command(message: Message):
     """ Функция для вывода всех категорий доходов в активном состоянии """
     await message.answer(
-        'Вы уже находитесь в состоянии выбора.\n'
+        'Вы уже находитесь в состоянии выбора (from incomes).\n'
         'Если хотите отменить операцию, пожалуйста, выберите команду '
         '/cancel в меню бота.',
     )
@@ -51,25 +52,29 @@ async def user_income_category(callback: CallbackQuery, state: FSMContext) -> No
 @router.message(StateFilter(FSMIncomes.amount))
 async def user_new_income(message: Message, state: FSMContext):
     ''' Функция добавления количества денег пользователем '''
-    user_answer = message.text
-    ''' Тут корявая проверка на float. Переделать '''
-    # if user_answer.count(',') > 0:
-    #     user_answer.replace(',','.', 1)
-    
-    if not isinstance(float(user_answer), float):
-        return await message.answer(
-            'Ошибка: некорректное значение. Пожалуйста, введите целочисленное число или число с запятой'
-        )
-
     try:
+        if message.text.count(',') > 0:
+            user_answer = message.text.replace(',','.', 1)
+        user_answer = float(user_answer)
         await state.update_data(amount=float(user_answer))
         data = await state.get_data()
+        data['amount'] = round(data['amount'], 2)
         await IncomesBankDAO.add(user_fk=message.from_user.id, **data)
         await message.answer(
             'Строка дохода успешно добавлена!'
         )
         await state.clear()
-    except Exception:
+    except ValueError:
         return await message.answer(
-            'Во время добавления дохода возникла ошибка. Пожалуйста, повторите процесс'
+            'Ошибка: некорректное значение. Пожалуйста, введите целочисленное число или число с запятой'
+        )
+    except IntegrityError as i:
+        print(i)
+        return await message.answer(
+            'Проихошла ошибка. Пожалуйста, повторите операцию с момента ввода суммы'
+        )
+    except CompileError as e:
+        print(e)
+        return await message.answer(
+            'Проихошла ошибка. Пожалуйста, повторите операцию с момента ввода суммы'
         )

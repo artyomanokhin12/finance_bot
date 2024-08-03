@@ -9,4 +9,4 @@ class Incomes(Base):
     incomes_name: Mapped[str | None]
 
     def __repr__(self):
-        return self.ru_incomes_name
+        return self.incomes_name

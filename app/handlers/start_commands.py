@@ -30,6 +30,12 @@ async def start_command(message: Message):
             'Для получения более подробной информации о лимите, вы можете обратиться к команде /help'
         )
 
+@router.message(CommandStart(), ~StateFilter(default_state))
+async def start_command_in_state(message: Message):
+    await message.answer(
+        'Вы уже находитесь в состоянии выбора (from start)'
+    )
+
 
 @router.message(Command(commands=['limit']), StateFilter(default_state))
 async def input_limit(message: Message, state: FSMContext):
@@ -44,7 +50,7 @@ async def input_limit(message: Message, state: FSMContext):
 @router.message(Command(commands=['limit']), ~StateFilter(default_state))
 async def input_limit_in_state(message: Message):
     await message.answer(
-        'Вы уже находитесь в состоянии ввода инфомации.\n' 
+        'Вы уже находитесь в состоянии ввода инфомации (из модуля limit).\n' 
         'Если вы хотите прервать выполнение операции, пожалуйста, введите /cancel.\n'
     )
 
