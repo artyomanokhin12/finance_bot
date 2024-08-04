@@ -3,8 +3,6 @@ import sys
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import Redis, RedisStorage
-from loguru import logger
-
 
 from app.config import settings
 
@@ -15,6 +13,7 @@ from app.handlers.other_handlers import router as other_router
 from app.handlers.cancel_command import router as cancel_router
 from app.handlers.test_handlers import router as test_handlers
 from app.menu import set_main_menu
+from app.logging import setup_logger
 
 async def main():
 
@@ -37,6 +36,7 @@ async def main():
 
 if __name__ == '__main__':
     try:
+        setup_logger('INFO', ['sqlalchemy.engine', 'aiogram.bot.api'])
         asyncio.run(main())
     except (KeyboardInterrupt, SystemError):
         print('Бот был остановлен')

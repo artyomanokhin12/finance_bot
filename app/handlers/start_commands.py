@@ -1,3 +1,5 @@
+""" Модуль начала пользования ботом и добавления лимита трат """
+
 from aiogram import Router
 from aiogram.filters import Command, CommandStart, StateFilter
 from aiogram.fsm.state import default_state
@@ -13,6 +15,7 @@ router = Router()
 
 @router.message(CommandStart())
 async def start_command(message: Message):
+    """ Функция старта пользования ботом """
     status = await UsersDAO.find_by_id(message.from_user.id)
 
     if status:
@@ -32,6 +35,7 @@ async def start_command(message: Message):
 
 @router.message(CommandStart(), ~StateFilter(default_state))
 async def start_command_in_state(message: Message):
+    """ Функция-обработчик команды старта в режиме состояния """
     await message.answer(
         'Вы уже находитесь в состоянии выбора (from start)'
     )
@@ -39,6 +43,7 @@ async def start_command_in_state(message: Message):
 
 @router.message(Command(commands=['limit']), StateFilter(default_state))
 async def input_limit(message: Message, state: FSMContext):
+    """ Функция начала добавления лимита """
     await message.answer(
         'Пожалуйста, введите лимит трат на месяц.\n'
         'Формат ввода: целочисленный <123, 1000, 5555>'
@@ -49,6 +54,7 @@ async def input_limit(message: Message, state: FSMContext):
 
 @router.message(Command(commands=['limit']), ~StateFilter(default_state))
 async def input_limit_in_state(message: Message):
+    """ Функция-обработчик команды лимита в режиме состояния """
     await message.answer(
         'Вы уже находитесь в состоянии ввода инфомации (из модуля limit).\n' 
         'Если вы хотите прервать выполнение операции, пожалуйста, введите /cancel.\n'
@@ -57,6 +63,7 @@ async def input_limit_in_state(message: Message):
 
 @router.message(StateFilter(FSMInputLimit.limit))
 async def final_input_limit(message: Message, state: FSMContext):
+    """ Функция внесения пользователем лимита и внесение информации в базу данных """
 
     if not message.text.isdecimal():
         return await message.answer(

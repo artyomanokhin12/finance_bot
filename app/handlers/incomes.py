@@ -54,8 +54,10 @@ async def user_new_income(message: Message, state: FSMContext):
     ''' Функция добавления количества денег пользователем '''
     try:
         if message.text.count(',') > 0:
-            user_answer = message.text.replace(',','.', 1)
-        user_answer = float(user_answer)
+            user_answer = float(message.text.replace(',','.', 1))
+        else:
+            user_answer = float(message.text)
+            
         await state.update_data(amount=float(user_answer))
         data = await state.get_data()
         data['amount'] = round(data['amount'], 2)
