@@ -17,7 +17,7 @@ class Users(Base):
         nullable=False
         )
     users_limit: Mapped[int | None] = mapped_column(Numeric)
-    current_balance: Mapped[int | None] = mapped_column(Numeric)
+    current_balance: Mapped[float | None] = mapped_column(Numeric)
     blocked: Mapped[bool | None]
 
     spendings_bank: Mapped[list['SpendingsBank']] = relationship()

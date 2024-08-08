@@ -42,3 +42,23 @@ async def incomes_buttons() -> InlineKeyboardMarkup:
         )
     kb_builder.row(*buttons, width=3)
     return kb_builder.as_markup()
+
+
+async def period_buttons() -> InlineKeyboardMarkup:
+    
+    period = {
+        'day': 'День',
+        'week': 'Неделя',
+        'month': 'Месяц',
+    }
+    buttons = []
+    kb_builder = InlineKeyboardBuilder()
+    for key, value in period.items():
+        buttons.append(
+            InlineKeyboardButton(
+                text=value,
+                callback_data=key,
+            )
+        )
+    kb_builder.row(*buttons, width=3)
+    return kb_builder.as_markup()

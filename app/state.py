@@ -16,3 +16,8 @@ class FSMSpendings(StatesGroup):
 
     spending_fk = State()
     amount = State()
+
+
+class FSMState(StatesGroup):
+
+    period = State()
