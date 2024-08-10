@@ -1,5 +1,4 @@
 from datetime import date, timedelta
-import time
 
 from aiogram import Router
 from aiogram.filters import Command, StateFilter
@@ -38,10 +37,12 @@ async def user_income_wrong_category(message: Message):
 
 @router.callback_query(StateFilter(FSMState.period))
 async def stat_test_command(callback: CallbackQuery, state: FSMContext):
-    
+    """ Функция для отображения статистики пользователя """
+    await callback.answer()
+    await callback.message.delete()
+
     period = callback.data
     
-
     match period:
         case 'day':
             date_from = date.today()
@@ -62,5 +63,4 @@ async def stat_test_command(callback: CallbackQuery, state: FSMContext):
     return await callback.message.answer(
         result
     )
-    
     

@@ -1,4 +1,3 @@
-import asyncio
 import datetime
 
 from sqlalchemy import select, func, and_
@@ -73,13 +72,12 @@ async def get_stats(user_id: int, date_from: datetime.date, date_to: datetime.da
 
         query = (
             select(
-                Users.id,
-                spend_true.c.sum_amount_true.label('spend_true'),
-                spend_false.c.sum_amount_false.label('spend_false'),
-                (spend_true.c.sum_amount_true + spend_false.c.sum_amount_false).label('spend_all'),
-                incomes_all.c.sum_incomes.label('sum_incomes'),
-                Users.current_balance,
-                Users.users_limit
+                spend_true.c.sum_amount_true.label('Потрачено на основные категории'),
+                spend_false.c.sum_amount_false.label('Потрачено на не основные категории'),
+                (spend_true.c.sum_amount_true + spend_false.c.sum_amount_false).label('Потрачено всего'),
+                incomes_all.c.sum_incomes.label('Получено всего'),
+                Users.current_balance.label('Текущий баланс'),
+                Users.users_limit.label('Остаток от лимита')
             )
             .select_from(Users)
             .join(spend_true, Users.id == spend_true.c.user_fk, isouter=True)
@@ -92,7 +90,7 @@ async def get_stats(user_id: int, date_from: datetime.date, date_to: datetime.da
 
         result_str = ''
         for key, value in result.items():
-            if key in ('current_balance', 'users_limit'):
+            if key in ('Текущий баланс', 'Отстаток от лимита'):
                 value = float(value)
             if value is None:
                 value = 0

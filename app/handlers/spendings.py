@@ -47,6 +47,7 @@ async def user_income_category(callback: CallbackQuery, state: FSMContext) -> No
     await callback.message.answer(
         'Введите, пожалуйста, сумму пополнения:'
     )
+    await callback.answer()
     await state.set_state(FSMSpendings.amount)
 
 @router.message(StateFilter(FSMSpendings.amount))

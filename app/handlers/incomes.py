@@ -22,7 +22,6 @@ async def incomes_command(message: Message, state: FSMContext):
     )
     await state.set_state(FSMIncomes.incomes_fk)
 
-
 @router.message(Command(commands=['income']), ~StateFilter(default_state))
 async def incomes_command(message: Message):
     """ Функция для вывода всех категорий доходов в активном состоянии """
@@ -32,7 +31,6 @@ async def incomes_command(message: Message):
         '/cancel в меню бота.',
     )
     
-
 @router.message(StateFilter(FSMIncomes.incomes_fk))
 async def user_income_wrong_category(message: Message):
     ''' Функция-обработчик ошибки выбора пользователем категории '''
@@ -44,6 +42,7 @@ async def user_income_wrong_category(message: Message):
 async def user_income_category(callback: CallbackQuery, state: FSMContext) -> None:
     ''' Функция выбора пользователем категории и переход на ввод суммы денег '''
     await state.update_data(incomes_fk=int(callback.data))
+    await callback.answer()
     await callback.message.answer(
         'Введите, пожалуйста, сумму пополнения:'
     )
