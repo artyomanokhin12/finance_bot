@@ -61,9 +61,9 @@ async def user_new_income(message: Message, state: FSMContext):
         await state.update_data(amount=float(user_answer))
         data = await state.get_data()
         data['amount'] = round(data['amount'], 2)
-        await SpendingsBankDAO.add(user_fk=message.from_user.id, **data)
+        result = await SpendingsBankDAO.add(user_fk=message.from_user.id, **data)
         await message.answer(
-            'Строка расхода успешно добавлена!'
+            result
         )
         await state.clear()
     except ValueError:

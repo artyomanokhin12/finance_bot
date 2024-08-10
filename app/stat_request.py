@@ -28,7 +28,6 @@ async def get_stats(user_id: int, date_from: datetime.date, date_to: datetime.da
                     ),
                 ),
             )
-            # .filter_by(user_fk=user_id)
             .group_by(SpendingsBank.user_fk)
             .cte('spend_true')
         )
@@ -49,7 +48,6 @@ async def get_stats(user_id: int, date_from: datetime.date, date_to: datetime.da
                     ),
                 ),
             )
-            # .filter_by(user_fk=user_id)
             .group_by(SpendingsBank.user_fk)
             .cte('spend_false')
         )
@@ -70,6 +68,18 @@ async def get_stats(user_id: int, date_from: datetime.date, date_to: datetime.da
             .cte('incomes_all')
         )
 
+        spend_all_month = (
+            select(SpendingsBank.user_fk, func.sum(SpendingsBank.amount).label('sum_all_time'))
+            .where(
+                and_(
+                    SpendingsBank.operation_date >= datetime.date.today().replace(day=1),
+                    SpendingsBank.operation_date <= datetime.date.today() + datetime.timedelta(days=1)
+                )
+            )
+            .group_by(SpendingsBank.user_fk)
+            .cte('spend_all_month')
+        )
+
         query = (
             select(
                 spend_true.c.sum_amount_true.label('Потрачено на основные категории'),
@@ -77,12 +87,13 @@ async def get_stats(user_id: int, date_from: datetime.date, date_to: datetime.da
                 (spend_true.c.sum_amount_true + spend_false.c.sum_amount_false).label('Потрачено всего'),
                 incomes_all.c.sum_incomes.label('Получено всего'),
                 Users.current_balance.label('Текущий баланс'),
-                Users.users_limit.label('Остаток от лимита')
+                (Users.users_limit - spend_all_month.c.sum_all_time).label('Остаток от лимита')
             )
             .select_from(Users)
             .join(spend_true, Users.id == spend_true.c.user_fk, isouter=True)
             .join(spend_false, Users.id == spend_false.c.user_fk, isouter=True)
             .join(incomes_all, Users.id == incomes_all.c.user_fk, isouter=True)
+            .join(spend_all_month, Users.id == spend_all_month.c.user_fk, isouter=True)
             .where(Users.id == user_id)
         )
         result = await session.execute(query)

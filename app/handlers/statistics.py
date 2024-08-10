@@ -47,12 +47,15 @@ async def stat_test_command(callback: CallbackQuery, state: FSMContext):
         case 'day':
             date_from = date.today()
             date_to = date_from + timedelta(days=1)
+            print('date_from=', date_from, 'date_to=', date_to)
         case 'week':
-            date_to = date.today()
+            date_to = date.today() + timedelta(days=1)
             date_from = date_to - timedelta(days=7)
+            print('date_from=', date_from, 'date_to=', date_to)
         case 'month':
             date_to = date.today().replace(day=1)
             date_from = (date_to - timedelta(days=date_to.day)).replace(day=1)
+            print('date_from=', date_from, 'date_to=', date_to)
 
     result = await get_stats(
         user_id = callback.from_user.id, 
