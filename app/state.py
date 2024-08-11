@@ -21,3 +21,8 @@ class FSMSpendings(StatesGroup):
 class FSMState(StatesGroup):
 
     period = State()
+
+
+class FSMReset(StatesGroup):
+
+    confirmation = State()

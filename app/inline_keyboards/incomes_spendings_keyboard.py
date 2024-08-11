@@ -1,3 +1,4 @@
+from aiogram.filters import callback_data
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
@@ -62,4 +63,24 @@ async def period_buttons() -> InlineKeyboardMarkup:
             )
         )
     kb_builder.row(*buttons, width=2)
+    return kb_builder.as_markup()
+
+
+async def reset_keyboard() -> InlineKeyboardMarkup:
+
+    buttons = {
+        'yes': 'Да',
+        'no': 'Нет',
+    }
+
+    button = []
+    kb_builder = InlineKeyboardBuilder()
+    for key, value in buttons.items():
+        button.append(
+            InlineKeyboardButton(
+                text=value,
+                callback_data=key
+            )
+        )
+    kb_builder.row(*button, width=2)
     return kb_builder.as_markup()

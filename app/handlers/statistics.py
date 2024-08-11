@@ -11,12 +11,19 @@ from app.state import FSMState
 from app.stat_request import get_stats
 from app.inline_keyboards.incomes_spendings_keyboard import period_buttons
 from app.lexicon import LEXICON
+from app.users.dao import UsersDAO
 
 router = Router()
 
 
 @router.message(Command(commands=['stat']), StateFilter(default_state))
 async def stat_command(message: Message, state: FSMContext):
+
+    if not await UsersDAO.find_by_id(message.from_user.id):
+        return await message.answer(
+            LEXICON['reset']
+        )   
+    
     await state.set_state(FSMState.period)
     return await message.answer(
         LEXICON['stat_start'],
@@ -32,7 +39,7 @@ async def stat_command_with_state(message: Message):
 @router.message(StateFilter(FSMState.period))
 async def user_income_wrong_category(message: Message):
     ''' Функция-обработчик ошибки выбора пользователем категории '''
-    await message.answer(
+    return await message.answer(
         LEXICON['stat_period_error']
     )
 
@@ -48,20 +55,25 @@ async def stat_test_command(callback: CallbackQuery, state: FSMContext):
         case 'day':
             date_from = date.today()
             date_to = date_from + timedelta(days=1)
+            prev_month = False
         case 'week':
             date_to = date.today() + timedelta(days=1)
             date_from = date_to - timedelta(days=7)
+            prev_month = False
         case 'prev_month':
             date_to = date.today().replace(day=1)
             date_from = (date_to - timedelta(days=date_to.day)).replace(day=1)
+            prev_month = True
         case 'curr_month': 
             date_from = date.today().replace(day=1)
             date_to = date.today() + timedelta(days=1)
+            prev_month = False
 
     result = await get_stats(
         user_id = callback.from_user.id, 
         date_from = date_from,
         date_to = date_to,
+        prev_month = prev_month,
         ) 
     await state.clear()
     return await callback.message.answer(

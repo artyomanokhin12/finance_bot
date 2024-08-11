@@ -11,12 +11,19 @@ from app.inline_keyboards.incomes_spendings_keyboard import spendings_buttons
 from app.spendings_bank.dao import SpendingsBankDAO
 from app.state import FSMSpendings
 from app.lexicon import LEXICON
+from app.users.dao import UsersDAO
 
 router = Router()
 
 @router.message(Command(commands=['spending']), StateFilter(default_state))
 async def incomes_command(message: Message, state: FSMContext):
     """ Функция для вывода всех категорий расходов """
+
+    if not await UsersDAO.find_by_id(message.from_user.id):
+        return await message.answer(
+            LEXICON['reset']
+        )
+
     await message.answer(
         LEXICON['spending_start'],
         reply_markup = await spendings_buttons()

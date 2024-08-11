@@ -11,7 +11,7 @@ class SpendingsBank(Base):
     __tablename__ = 'spendings_bank'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_fk: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='RESTRICT'))
+    user_fk: Mapped[int | None] = mapped_column(ForeignKey('users.id', ondelete='SET NULL'))
     spending_fk = mapped_column(ForeignKey('spendings.id'))
     amount: Mapped[float]
     operation_date: Mapped[datetime.datetime] = mapped_column(server_default=text('now()'))

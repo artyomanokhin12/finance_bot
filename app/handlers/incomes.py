@@ -11,12 +11,19 @@ from app.incomes_bank.dao import IncomesBankDAO
 from app.inline_keyboards.incomes_spendings_keyboard import incomes_buttons
 from app.state import FSMIncomes
 from app.lexicon import LEXICON
+from app.users.dao import UsersDAO
 
 router = Router()
 
 @router.message(Command(commands=['income']), StateFilter(default_state))
 async def incomes_command(message: Message, state: FSMContext):
     """ Функция для вывода всех категорий доходов """
+
+    if not await UsersDAO.find_by_id(message.from_user.id):
+        return await message.answer(
+            LEXICON['reset']
+        )
+
     await message.answer(
         LEXICON['incomes_start'],
         reply_markup = await incomes_buttons()

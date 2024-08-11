@@ -4,11 +4,12 @@ from aiogram import Router
 from aiogram.filters import Command, CommandStart, StateFilter
 from aiogram.fsm.state import default_state
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.types import CallbackQuery, Message
 
-from app.state import FSMInputLimit
+from app.state import FSMInputLimit, FSMReset
 from app.users.dao import UsersDAO
 from app.lexicon import LEXICON
+from app.inline_keyboards.incomes_spendings_keyboard import reset_keyboard
 
 
 router = Router()
@@ -17,17 +18,14 @@ router = Router()
 @router.message(CommandStart())
 async def start_command(message: Message):
     """ Функция старта пользования ботом """
-    status = await UsersDAO.find_by_id(message.from_user.id)
 
-    if status:
-        await message.answer(
+    if await UsersDAO.find_by_id(message.from_user.id):
+        return await message.answer(
             LEXICON['return']
         )
     else:
-        print(message.from_user.id)
-        await UsersDAO.add(id=message.from_user.id)
-        
-        await message.answer(
+        await UsersDAO.add(id=message.from_user.id)        
+        return await message.answer(
             LEXICON['start']
         )
 
@@ -76,3 +74,43 @@ async def final_input_limit(message: Message, state: FSMContext):
     await message.answer(
         'Вы успешно добавили свой месячный лимит!'
     )
+
+
+@router.message(Command(commands=['reset']), StateFilter(default_state))
+async def reset_func(message: Message, state: FSMContext):
+    await message.answer(
+        LEXICON['reset_info'],
+        reply_markup=await reset_keyboard(),
+    )
+    await state.set_state(FSMReset.confirmation)
+
+
+@router.message(Command(commands=['reset']), ~StateFilter(default_state))
+async def reset_command_in_state(message: Message):
+    return await message.answer(
+        LEXICON['cancel']
+    )
+
+
+@router.message(StateFilter(FSMReset.confirmation))
+async def wrong_reset_in_state(message: Message):
+    return await message.answer(
+        'Пожалуйста, нажмите на одну из предложенных кнопок.'
+    )
+
+
+@router.callback_query(StateFilter(FSMReset.confirmation))
+async def main_reset(callback: CallbackQuery, state: FSMContext):
+    if callback.data == 'no':
+        await state.clear()
+        await callback.answer()
+        return await callback.message.answer(
+            'Отмена операции'
+        )
+    elif callback.data == 'yes':
+        await UsersDAO.delete(user_id = callback.from_user.id)
+        await state.clear()
+        await callback.answer()
+        return await callback.message.answer(
+            'Все записи с вашими доходами и расходами удалены. Чтобы начать пользоваться ботом снвоа, пожалуйста, введите команду /start'
+        )
