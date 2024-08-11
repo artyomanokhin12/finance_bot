@@ -1,11 +1,10 @@
-from aiogram.filters import callback_data
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from app.spendings.dao import SpendingsDAO
-from app.spendings.models import Spendings
 from app.incomes.dao import IncomesDAO
 from app.incomes.models import Incomes
+from app.spendings.dao import SpendingsDAO
+from app.spendings.models import Spendings
 
 
 async def get_all_incomes() -> list[Incomes]:

@@ -1,8 +1,9 @@
 from sqlalchemy import insert, update
+
 from app.dao.base import BaseDAO
+from app.database import async_session_maker
 from app.spendings_bank.models import SpendingsBank
 from app.users.models import Users
-from app.database import async_session_maker
 
 
 class SpendingsBankDAO(BaseDAO):

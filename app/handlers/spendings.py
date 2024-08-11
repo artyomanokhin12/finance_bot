@@ -2,22 +2,22 @@
 
 from aiogram import Router
 from aiogram.filters import Command, StateFilter
-from aiogram.fsm.state import default_state
 from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import default_state
 from aiogram.types import CallbackQuery, Message
-from sqlalchemy.exc import IntegrityError, CompileError
+from sqlalchemy.exc import CompileError, IntegrityError
 
 from app.inline_keyboards.incomes_spendings_keyboard import spendings_buttons
+from app.lexicon import LEXICON
 from app.spendings_bank.dao import SpendingsBankDAO
 from app.state import FSMSpendings
-from app.lexicon import LEXICON
 from app.users.dao import UsersDAO
 
 router = Router()
 
 
 @router.message(Command(commands=["spending"]), StateFilter(default_state))
-async def incomes_command(message: Message, state: FSMContext):
+async def spendings_command(message: Message, state: FSMContext):
     """Функция для вывода всех категорий расходов"""
 
     if not await UsersDAO.find_by_id(message.from_user.id):
@@ -30,7 +30,7 @@ async def incomes_command(message: Message, state: FSMContext):
 
 
 @router.message(Command(commands=["spendings"]), ~StateFilter(default_state))
-async def incomes_command(message: Message):
+async def spendings_command_in_state(message: Message):
     """Функция для вывода всех категорий расходов в активном состоянии"""
     await message.answer(LEXICON["cancel"])
 
@@ -66,9 +66,9 @@ async def user_new_income(message: Message, state: FSMContext):
         await state.clear()
     except ValueError:
         return await message.answer(LEXICON["error_wrong_value"])
-    except IntegrityError as i:
+    except IntegrityError:
         return await message.answer(LEXICON["error_server"])
-    except CompileError as e:
+    except CompileError:
         return await message.answer(LEXICON["error_server"])
-    except UnboundLocalError as e:
+    except UnboundLocalError:
         return await message.answer(LEXICON["error_server"])

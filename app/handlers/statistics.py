@@ -2,15 +2,14 @@ from datetime import date, timedelta
 
 from aiogram import Router
 from aiogram.filters import Command, StateFilter
-from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import default_state
+from aiogram.types import CallbackQuery, Message
 
-from app.state import FSMState
-
-from app.stat_request import get_stats
 from app.inline_keyboards.incomes_spendings_keyboard import period_buttons
 from app.lexicon import LEXICON
+from app.stat_request import get_stats
+from app.state import FSMState
 from app.users.dao import UsersDAO
 
 router = Router()

@@ -4,15 +4,14 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import Redis, RedisStorage
 
 from app.config import settings
-
-from app.handlers.start_commands import router as start_router
-from app.handlers.spendings import router as spendings_router
+from app.handlers.cancel_command import router as cancel_router
 from app.handlers.incomes import router as incomes_router
 from app.handlers.other_handlers import router as other_router
-from app.handlers.cancel_command import router as cancel_router
+from app.handlers.spendings import router as spendings_router
+from app.handlers.start_commands import router as start_router
 from app.handlers.statistics import router as stat_router
-from app.menu import set_main_menu
 from app.logging import setup_logger
+from app.menu import set_main_menu
 
 
 async def main():

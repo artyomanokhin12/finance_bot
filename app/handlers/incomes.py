@@ -28,7 +28,7 @@ async def incomes_command(message: Message, state: FSMContext):
 
 
 @router.message(Command(commands=["income"]), ~StateFilter(default_state))
-async def incomes_command(message: Message):
+async def incomes_command_in_state(message: Message):
     """Функция для вывода всех категорий доходов в активном состоянии"""
     await message.answer(
         LEXICON["cancel"],
@@ -67,7 +67,7 @@ async def user_new_income(message: Message, state: FSMContext):
         await state.clear()
     except ValueError:
         return await message.answer(LEXICON["error_wrong_value"])
-    except IntegrityError as i:
+    except IntegrityError:
         return await message.answer(LEXICON["error_server"])
-    except CompileError as e:
+    except CompileError:
         return await message.answer(LEXICON["error_server"])

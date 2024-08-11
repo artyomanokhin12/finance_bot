@@ -1,6 +1,5 @@
 from sqlalchemy import Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.orm import relationship
 
 from app.database import Base
 from app.incomes_bank.models import IncomesBank

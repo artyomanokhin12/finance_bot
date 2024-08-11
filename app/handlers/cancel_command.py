@@ -2,12 +2,11 @@
 
 from aiogram import Router
 from aiogram.filters import Command, StateFilter
-from aiogram.fsm.state import default_state
 from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import default_state
 from aiogram.types import Message
 
 from app.lexicon import LEXICON
-
 
 router = Router()
 

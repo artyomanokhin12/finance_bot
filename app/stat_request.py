@@ -1,11 +1,11 @@
 import datetime
 
-from sqlalchemy import select, func, and_
+from sqlalchemy import and_, func, select
 
 from app.database import async_session_maker
-from app.spendings_bank.models import SpendingsBank
-from app.spendings.models import Spendings
 from app.incomes_bank.models import IncomesBank
+from app.spendings.models import Spendings
+from app.spendings_bank.models import SpendingsBank
 from app.users.models import Users
 
 
