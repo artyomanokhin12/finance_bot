@@ -15,76 +15,60 @@ from app.users.dao import UsersDAO
 
 router = Router()
 
-@router.message(Command(commands=['spending']), StateFilter(default_state))
+
+@router.message(Command(commands=["spending"]), StateFilter(default_state))
 async def incomes_command(message: Message, state: FSMContext):
-    """ Функция для вывода всех категорий расходов """
+    """Функция для вывода всех категорий расходов"""
 
     if not await UsersDAO.find_by_id(message.from_user.id):
-        return await message.answer(
-            LEXICON['reset']
-        )
+        return await message.answer(LEXICON["reset"])
 
     await message.answer(
-        LEXICON['spending_start'],
-        reply_markup = await spendings_buttons()
+        LEXICON["spending_start"], reply_markup=await spendings_buttons()
     )
     await state.set_state(FSMSpendings.spending_fk)
 
 
-@router.message(Command(commands=['spendings']), ~StateFilter(default_state))
+@router.message(Command(commands=["spendings"]), ~StateFilter(default_state))
 async def incomes_command(message: Message):
-    """ Функция для вывода всех категорий расходов в активном состоянии """
-    await message.answer(
-        LEXICON['cancel']
-    )
-    
+    """Функция для вывода всех категорий расходов в активном состоянии"""
+    await message.answer(LEXICON["cancel"])
+
 
 @router.message(StateFilter(FSMSpendings.spending_fk))
 async def user_income_wrong_category(message: Message):
-    ''' Функция-обработчик ошибки выбора пользователем категории '''
-    await message.answer(
-        LEXICON['wrong_category']
-    )
+    """Функция-обработчик ошибки выбора пользователем категории"""
+    await message.answer(LEXICON["wrong_category"])
+
 
 @router.callback_query(StateFilter(FSMSpendings.spending_fk))
 async def user_income_category(callback: CallbackQuery, state: FSMContext) -> None:
-    ''' Функция выбора пользователем категории и переход на ввод суммы денег '''
+    """Функция выбора пользователем категории и переход на ввод суммы денег"""
     await state.update_data(spending_fk=int(callback.data))
-    await callback.message.answer(
-        'Введите, пожалуйста, сумму расхода:'
-    )
+    await callback.message.answer("Введите, пожалуйста, сумму расхода:")
     await callback.answer()
     await state.set_state(FSMSpendings.amount)
 
+
 @router.message(StateFilter(FSMSpendings.amount))
 async def user_new_income(message: Message, state: FSMContext):
-    ''' Функция добавления количества денег пользователем '''
+    """Функция добавления количества денег пользователем"""
     try:
-        if message.text.count(',') > 0:
-            user_answer = float(message.text.replace(',','.', 1))
+        if message.text.count(",") > 0:
+            user_answer = float(message.text.replace(",", ".", 1))
         else:
             user_answer = float(message.text)
         await state.update_data(amount=float(user_answer))
         data = await state.get_data()
-        data['amount'] = round(data['amount'], 2)
+        data["amount"] = round(data["amount"], 2)
         result = await SpendingsBankDAO.add(user_fk=message.from_user.id, **data)
-        await message.answer(
-            result
-        )
+        await message.answer(result)
         await state.clear()
     except ValueError:
-        return await message.answer(
-            LEXICON['error_wrong_value']
-        )
+        return await message.answer(LEXICON["error_wrong_value"])
     except IntegrityError as i:
-        return await message.answer(
-            LEXICON['error_server']
-        )
+        return await message.answer(LEXICON["error_server"])
     except CompileError as e:
-        return await message.answer(
-            LEXICON['error_server']
-        )
+        return await message.answer(LEXICON["error_server"])
     except UnboundLocalError as e:
-        return await message.answer(
-            LEXICON['error_server']
-        )
+        return await message.answer(LEXICON["error_server"])

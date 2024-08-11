@@ -11,11 +11,13 @@ from app.incomes.models import Incomes
 async def get_all_incomes() -> list[Incomes]:
     return await IncomesDAO.find_all()
 
+
 async def get_all_spendings() -> list[Spendings]:
     return await SpendingsDAO.find_all()
 
+
 async def spendings_buttons() -> InlineKeyboardMarkup:
-    """ Функция создания инлайн-кнопок расходов """
+    """Функция создания инлайн-кнопок расходов"""
     buttons = []
     categories: list[Spendings] = await get_all_spendings()
     kb_builder = InlineKeyboardBuilder()
@@ -29,8 +31,9 @@ async def spendings_buttons() -> InlineKeyboardMarkup:
     kb_builder.row(*buttons, width=3)
     return kb_builder.as_markup()
 
+
 async def incomes_buttons() -> InlineKeyboardMarkup:
-    """ Функция создания инлайн-кнопок доходов """
+    """Функция создания инлайн-кнопок доходов"""
     buttons = []
     categories: list[Incomes] = await get_all_incomes()
     kb_builder = InlineKeyboardBuilder()
@@ -46,12 +49,12 @@ async def incomes_buttons() -> InlineKeyboardMarkup:
 
 
 async def period_buttons() -> InlineKeyboardMarkup:
-    
+
     period = {
-        'day': 'День',
-        'week': 'Неделя',
-        'curr_month': 'Текущий месяц',
-        'prev_month': 'Прошлый месяц',
+        "day": "День",
+        "week": "Неделя",
+        "curr_month": "Текущий месяц",
+        "prev_month": "Прошлый месяц",
     }
     buttons = []
     kb_builder = InlineKeyboardBuilder()
@@ -69,18 +72,13 @@ async def period_buttons() -> InlineKeyboardMarkup:
 async def reset_keyboard() -> InlineKeyboardMarkup:
 
     buttons = {
-        'yes': 'Да',
-        'no': 'Нет',
+        "yes": "Да",
+        "no": "Нет",
     }
 
     button = []
     kb_builder = InlineKeyboardBuilder()
     for key, value in buttons.items():
-        button.append(
-            InlineKeyboardButton(
-                text=value,
-                callback_data=key
-            )
-        )
+        button.append(InlineKeyboardButton(text=value, callback_data=key))
     kb_builder.row(*button, width=2)
     return kb_builder.as_markup()

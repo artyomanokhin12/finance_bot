@@ -9,11 +9,16 @@ from app.incomes_bank.models import IncomesBank
 from app.users.models import Users
 
 
-async def get_stats(user_id: int, date_from: datetime.date, date_to: datetime.date, prev_month: bool):
-    
+async def get_stats(
+    user_id: int, date_from: datetime.date, date_to: datetime.date, prev_month: bool
+):
+
     async with async_session_maker() as session:
         spend_true = (
-            select(SpendingsBank.user_fk, func.sum(SpendingsBank.amount).label('sum_amount_true'))
+            select(
+                SpendingsBank.user_fk,
+                func.sum(SpendingsBank.amount).label("sum_amount_true"),
+            )
             .select_from(SpendingsBank)
             .where(
                 and_(
@@ -29,11 +34,14 @@ async def get_stats(user_id: int, date_from: datetime.date, date_to: datetime.da
                 ),
             )
             .group_by(SpendingsBank.user_fk)
-            .cte('spend_true')
+            .cte("spend_true")
         )
 
         spend_false = (
-            select(SpendingsBank.user_fk, func.sum(SpendingsBank.amount).label('sum_amount_false'))
+            select(
+                SpendingsBank.user_fk,
+                func.sum(SpendingsBank.amount).label("sum_amount_false"),
+            )
             .select_from(SpendingsBank)
             .where(
                 and_(
@@ -49,11 +57,13 @@ async def get_stats(user_id: int, date_from: datetime.date, date_to: datetime.da
                 ),
             )
             .group_by(SpendingsBank.user_fk)
-            .cte('spend_false')
+            .cte("spend_false")
         )
-    
+
         incomes_all = (
-            select(IncomesBank.user_fk, func.sum(IncomesBank.amount).label('sum_incomes'))
+            select(
+                IncomesBank.user_fk, func.sum(IncomesBank.amount).label("sum_incomes")
+            )
             .select_from(IncomesBank)
             .where(
                 and_(
@@ -61,36 +71,45 @@ async def get_stats(user_id: int, date_from: datetime.date, date_to: datetime.da
                     and_(
                         IncomesBank.operation_date >= date_from,
                         IncomesBank.operation_date < date_to,
-                    )
+                    ),
                 )
             )
             .group_by(IncomesBank.user_fk)
-            .cte('incomes_all')
+            .cte("incomes_all")
         )
-        
+
         if not prev_month:
             date_from = datetime.date.today().replace(day=1)
             date_to = datetime.date.today() + datetime.timedelta(days=1)
         spend_all_month = (
-            select(SpendingsBank.user_fk, func.sum(SpendingsBank.amount).label('sum_all_month'))
+            select(
+                SpendingsBank.user_fk,
+                func.sum(SpendingsBank.amount).label("sum_all_month"),
+            )
             .where(
                 and_(
                     SpendingsBank.operation_date >= date_from,
-                    SpendingsBank.operation_date <= date_to
+                    SpendingsBank.operation_date <= date_to,
                 )
             )
             .group_by(SpendingsBank.user_fk)
-            .cte('spend_all_month')
+            .cte("spend_all_month")
         )
 
         query = (
             select(
-                spend_true.c.sum_amount_true.label('Потрачено на основные категории'),
-                spend_false.c.sum_amount_false.label('Потрачено на не основные категории'),
-                (spend_true.c.sum_amount_true + spend_false.c.sum_amount_false).label('Потрачено всего'),
-                incomes_all.c.sum_incomes.label('Получено всего'),
-                Users.current_balance.label('Текущий баланс'),
-                (Users.users_limit - spend_all_month.c.sum_all_month).label('Остаток от лимита')
+                spend_true.c.sum_amount_true.label("Потрачено на основные категории"),
+                spend_false.c.sum_amount_false.label(
+                    "Потрачено на не основные категории"
+                ),
+                (spend_true.c.sum_amount_true + spend_false.c.sum_amount_false).label(
+                    "Потрачено всего"
+                ),
+                incomes_all.c.sum_incomes.label("Получено всего"),
+                Users.current_balance.label("Текущий баланс"),
+                (Users.users_limit - spend_all_month.c.sum_all_month).label(
+                    "Остаток от лимита"
+                ),
             )
             .select_from(Users)
             .join(spend_true, Users.id == spend_true.c.user_fk, isouter=True)
@@ -102,12 +121,12 @@ async def get_stats(user_id: int, date_from: datetime.date, date_to: datetime.da
         result = await session.execute(query)
         result = result.mappings().one_or_none()
 
-        result_str = ''
+        result_str = ""
         for key, value in result.items():
             if value is None:
                 value = 0
-            if key in ('Текущий баланс', 'Отстаток от лимита'):
+            if key in ("Текущий баланс", "Отстаток от лимита"):
                 value = float(value)
-            result_str = result_str + f'{key}: {value}' + '\n'
+            result_str = result_str + f"{key}: {value}" + "\n"
 
         return result_str

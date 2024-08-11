@@ -14,6 +14,7 @@ from app.handlers.statistics import router as stat_router
 from app.menu import set_main_menu
 from app.logging import setup_logger
 
+
 async def main():
 
     bot = Bot(settings.BOT_API)
@@ -33,9 +34,9 @@ async def main():
     await dp.start_polling(bot)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
-        setup_logger('INFO', ['sqlalchemy.engine', 'aiogram.bot.api'])
+        setup_logger("INFO", ["sqlalchemy.engine", "aiogram.bot.api"])
         asyncio.run(main())
     except (KeyboardInterrupt, SystemError):
-        print('Бот был остановлен')
+        print("Бот был остановлен")

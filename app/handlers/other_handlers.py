@@ -8,6 +8,4 @@ router = Router()
 
 @router.message()
 async def empty_message(message: Message):
-    return await message.answer(
-        LEXICON['unknown_message']
-    )
+    return await message.answer(LEXICON["unknown_message"])

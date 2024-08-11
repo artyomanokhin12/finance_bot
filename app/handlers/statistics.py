@@ -16,67 +16,60 @@ from app.users.dao import UsersDAO
 router = Router()
 
 
-@router.message(Command(commands=['stat']), StateFilter(default_state))
+@router.message(Command(commands=["stat"]), StateFilter(default_state))
 async def stat_command(message: Message, state: FSMContext):
 
     if not await UsersDAO.find_by_id(message.from_user.id):
-        return await message.answer(
-            LEXICON['reset']
-        )   
-    
+        return await message.answer(LEXICON["reset"])
+
     await state.set_state(FSMState.period)
     return await message.answer(
-        LEXICON['stat_start'],
-        reply_markup = await period_buttons()
+        LEXICON["stat_start"], reply_markup=await period_buttons()
     )
 
-@router.message(Command(commands=['stat']), ~StateFilter(default_state))
+
+@router.message(Command(commands=["stat"]), ~StateFilter(default_state))
 async def stat_command_with_state(message: Message):
-    return await message.answer(
-        LEXICON['cancel']
-    )
+    return await message.answer(LEXICON["cancel"])
+
 
 @router.message(StateFilter(FSMState.period))
 async def user_income_wrong_category(message: Message):
-    ''' Функция-обработчик ошибки выбора пользователем категории '''
-    return await message.answer(
-        LEXICON['stat_period_error']
-    )
+    """Функция-обработчик ошибки выбора пользователем категории"""
+    return await message.answer(LEXICON["stat_period_error"])
+
 
 @router.callback_query(StateFilter(FSMState.period))
 async def stat_test_command(callback: CallbackQuery, state: FSMContext):
-    """ Функция для отображения статистики пользователя """
+    """Функция для отображения статистики пользователя"""
     await callback.answer()
     await callback.message.delete()
 
     period = callback.data
-    
+
     match period:
-        case 'day':
+        case "day":
             date_from = date.today()
             date_to = date_from + timedelta(days=1)
             prev_month = False
-        case 'week':
+        case "week":
             date_to = date.today() + timedelta(days=1)
             date_from = date_to - timedelta(days=7)
             prev_month = False
-        case 'prev_month':
+        case "prev_month":
             date_to = date.today().replace(day=1)
             date_from = (date_to - timedelta(days=date_to.day)).replace(day=1)
             prev_month = True
-        case 'curr_month': 
+        case "curr_month":
             date_from = date.today().replace(day=1)
             date_to = date.today() + timedelta(days=1)
             prev_month = False
 
     result = await get_stats(
-        user_id = callback.from_user.id, 
-        date_from = date_from,
-        date_to = date_to,
-        prev_month = prev_month,
-        ) 
-    await state.clear()
-    return await callback.message.answer(
-        result
+        user_id=callback.from_user.id,
+        date_from=date_from,
+        date_to=date_to,
+        prev_month=prev_month,
     )
-    
+    await state.clear()
+    return await callback.message.answer(result)

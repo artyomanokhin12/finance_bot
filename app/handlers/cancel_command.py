@@ -12,19 +12,14 @@ from app.lexicon import LEXICON
 router = Router()
 
 
-@router.message(Command(commands=['cancel']), StateFilter(default_state))
+@router.message(Command(commands=["cancel"]), StateFilter(default_state))
 async def cancel_command_without_state(message: Message):
-    """ Функция для выхода из состояния при неактивном состоянии """
-    return await message.answer(
-        LEXICON['cancel_without_state']
-    )
+    """Функция для выхода из состояния при неактивном состоянии"""
+    return await message.answer(LEXICON["cancel_without_state"])
 
 
-@router.message(Command(commands=['cancel']), ~StateFilter(default_state))
+@router.message(Command(commands=["cancel"]), ~StateFilter(default_state))
 async def cancel_command(message: Message, state: FSMContext):
-    """ Функция для выхода из состояния при активном состоянии """
+    """Функция для выхода из состояния при активном состоянии"""
     await state.clear()
-    return await message.answer(
-        LEXICON['cancel_with_state']
-    )
-
+    return await message.answer(LEXICON["cancel_with_state"])

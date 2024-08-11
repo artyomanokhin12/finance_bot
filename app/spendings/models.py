@@ -4,7 +4,7 @@ from app.database import Base
 
 
 class Spendings(Base):
-    __tablename__ = 'spendings'
+    __tablename__ = "spendings"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     spending_name: Mapped[str | None]
