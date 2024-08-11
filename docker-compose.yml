@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+
+  db:
+    image: postgres:15
+    container_name: finance_bot_postgres
+    volumes:
+      - data:/var/lib/postgresql/data
+    env_file: # Файл с переменными окружения (Вместо environment)
+      - .env-non-dev
+    ports:
+      - 5432:5432 # Порт нужен, только если нам нужен доступ к контейнеру напрямую
+
+
+  redis:
+    image: redis:7
+    container_name: finance_bot_redis
+  
+  main:
+    image: finance_bbot
+    build: 
+      context: .
+    container_name: finance_bbot
+    env_file:
+      - .env-non-dev
+    depends_on:
+      - db
+      - redis
+    command: ["/bot/docker_run.sh"]
+
+volumes:
+  data:
