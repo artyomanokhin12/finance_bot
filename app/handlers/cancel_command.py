@@ -6,6 +6,8 @@ from aiogram.fsm.state import default_state
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
+from app.lexicon import LEXICON
+
 
 router = Router()
 
@@ -14,7 +16,7 @@ router = Router()
 async def cancel_command_without_state(message: Message):
     """ Функция для выхода из состояния при неактивном состоянии """
     return await message.answer(
-        'Вы не находитесь в состоянии выполнения функции или команды. Отмена не нужна'
+        LEXICON['cancel_without_state']
     )
 
 
@@ -23,6 +25,6 @@ async def cancel_command(message: Message, state: FSMContext):
     """ Функция для выхода из состояния при активном состоянии """
     await state.clear()
     return await message.answer(
-        'Вы вышли из состояния выполнения функции!'
+        LEXICON['cancel_with_state']
     )
 

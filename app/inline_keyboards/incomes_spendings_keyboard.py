@@ -49,7 +49,8 @@ async def period_buttons() -> InlineKeyboardMarkup:
     period = {
         'day': 'День',
         'week': 'Неделя',
-        'month': 'Месяц',
+        'curr_month': 'Текущий месяц',
+        'prev_month': 'Прошлый месяц',
     }
     buttons = []
     kb_builder = InlineKeyboardBuilder()
@@ -60,5 +61,5 @@ async def period_buttons() -> InlineKeyboardMarkup:
                 callback_data=key,
             )
         )
-    kb_builder.row(*buttons, width=3)
+    kb_builder.row(*buttons, width=2)
     return kb_builder.as_markup()

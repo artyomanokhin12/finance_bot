@@ -10,6 +10,7 @@ from sqlalchemy.exc import IntegrityError, CompileError
 from app.inline_keyboards.incomes_spendings_keyboard import spendings_buttons
 from app.spendings_bank.dao import SpendingsBankDAO
 from app.state import FSMSpendings
+from app.lexicon import LEXICON
 
 router = Router()
 
@@ -17,7 +18,7 @@ router = Router()
 async def incomes_command(message: Message, state: FSMContext):
     """ Функция для вывода всех категорий расходов """
     await message.answer(
-        'Пожалуйста, выберите тип расхода',
+        LEXICON['spending_start'],
         reply_markup = await spendings_buttons()
     )
     await state.set_state(FSMSpendings.spending_fk)
@@ -27,9 +28,7 @@ async def incomes_command(message: Message, state: FSMContext):
 async def incomes_command(message: Message):
     """ Функция для вывода всех категорий расходов в активном состоянии """
     await message.answer(
-        'Вы уже находитесь в состоянии выбора (from spending).\n'
-        'Если хотите отменить операцию, пожалуйста, выберите команду '
-        '/cancel в меню бота.',
+        LEXICON['cancel']
     )
     
 
@@ -37,7 +36,7 @@ async def incomes_command(message: Message):
 async def user_income_wrong_category(message: Message):
     ''' Функция-обработчик ошибки выбора пользователем категории '''
     await message.answer(
-        'Ошибка выбора категории. Пожалуйста, выберите категорию из списка.'
+        LEXICON['wrong_category']
     )
 
 @router.callback_query(StateFilter(FSMSpendings.spending_fk))
@@ -45,7 +44,7 @@ async def user_income_category(callback: CallbackQuery, state: FSMContext) -> No
     ''' Функция выбора пользователем категории и переход на ввод суммы денег '''
     await state.update_data(spending_fk=int(callback.data))
     await callback.message.answer(
-        'Введите, пожалуйста, сумму пополнения:'
+        'Введите, пожалуйста, сумму расхода:'
     )
     await callback.answer()
     await state.set_state(FSMSpendings.amount)
@@ -68,20 +67,17 @@ async def user_new_income(message: Message, state: FSMContext):
         await state.clear()
     except ValueError:
         return await message.answer(
-            'Ошибка: некорректное значение. Пожалуйста, введите целочисленное число или число с запятой'
+            LEXICON['error_wrong_value']
         )
     except IntegrityError as i:
-        print(i)
         return await message.answer(
-            'Проихошла ошибка. Пожалуйста, повторите операцию с момента ввода суммы'
+            LEXICON['error_server']
         )
     except CompileError as e:
-        print(e)
         return await message.answer(
-            'Проихошла ошибка. Пожалуйста, повторите операцию с момента ввода суммы'
+            LEXICON['error_server']
         )
     except UnboundLocalError as e:
-        print(e)
         return await message.answer(
-            'Проихошла ошибка. Пожалуйста, повторите операцию с момента ввода суммы'
+            LEXICON['error_server']
         )

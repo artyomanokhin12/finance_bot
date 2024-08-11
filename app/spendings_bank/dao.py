@@ -23,4 +23,4 @@ class SpendingsBankDAO(BaseDAO):
             await session.execute(stmt_bank)
             await session.execute(stmt_user)
             await session.commit()
-            return 'Строка расхода успешно добавлена'
+            return 'Строка расхода успешно добавлена!'

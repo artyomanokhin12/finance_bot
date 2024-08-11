@@ -21,4 +21,4 @@ class IncomesBankDAO(BaseDAO):
             await session.execute(stmt_bank)
             await session.execute(stmt_user)
             await session.commit()
-            return 'Строка дохода успешно добавлена'
+            return 'Строка дохода успешно добавлена!'

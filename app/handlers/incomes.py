@@ -10,6 +10,7 @@ from sqlalchemy.exc import IntegrityError, CompileError
 from app.incomes_bank.dao import IncomesBankDAO
 from app.inline_keyboards.incomes_spendings_keyboard import incomes_buttons
 from app.state import FSMIncomes
+from app.lexicon import LEXICON
 
 router = Router()
 
@@ -17,7 +18,7 @@ router = Router()
 async def incomes_command(message: Message, state: FSMContext):
     """ Функция для вывода всех категорий доходов """
     await message.answer(
-        'Пожалуйста, выберите тип дохода',
+        LEXICON['incomes_start'],
         reply_markup = await incomes_buttons()
     )
     await state.set_state(FSMIncomes.incomes_fk)
@@ -26,16 +27,14 @@ async def incomes_command(message: Message, state: FSMContext):
 async def incomes_command(message: Message):
     """ Функция для вывода всех категорий доходов в активном состоянии """
     await message.answer(
-        'Вы уже находитесь в состоянии выбора (from incomes).\n'
-        'Если хотите отменить операцию, пожалуйста, выберите команду '
-        '/cancel в меню бота.',
+        LEXICON['cancel'],
     )
     
 @router.message(StateFilter(FSMIncomes.incomes_fk))
 async def user_income_wrong_category(message: Message):
     ''' Функция-обработчик ошибки выбора пользователем категории '''
     await message.answer(
-        'Ошибка выбора категории. Пожалуйста, выберите категорию из списка.'
+        LEXICON['wrong_category']
     )
 
 @router.callback_query(StateFilter(FSMIncomes.incomes_fk))
@@ -67,15 +66,13 @@ async def user_new_income(message: Message, state: FSMContext):
         await state.clear()
     except ValueError:
         return await message.answer(
-            'Ошибка: некорректное значение. Пожалуйста, введите целочисленное число или число с запятой'
+            LEXICON['error_wrong_value']
         )
     except IntegrityError as i:
-        print(i)
         return await message.answer(
-            'Проихошла ошибка. Пожалуйста, повторите операцию с момента ввода суммы'
+            LEXICON['error_server']
         )
     except CompileError as e:
-        print(e)
         return await message.answer(
-            'Проихошла ошибка. Пожалуйста, повторите операцию с момента ввода суммы'
+            LEXICON['error_server']
         )
