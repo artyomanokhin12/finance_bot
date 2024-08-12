@@ -2,6 +2,5 @@
 .env
 alembic.ini
 **/__pycache__
-db.sql
 app/handlers/test_handlers.py
 test.py
