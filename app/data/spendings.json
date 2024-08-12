@@ -1,0 +1,66 @@
+[
+    {
+        "spendings_name": "Кафе",
+        "optional_spendings": "false"
+    },
+    {
+        "spendings_name": "Бар",
+        "optional_spendings": "false"
+    },
+    {
+        "spendings_name": "Здоровье",
+        "optional_spendings": "true"
+    },
+    {
+        "spendings_name": "Такси",
+        "optional_spendings": "false"
+    },
+    {
+        "spendings_name": "Книги",
+        "optional_spendings": "false"
+    },
+    {
+        "spendings_name": "Подписки",
+        "optional_spendings": "false"
+    },
+    {
+        "spendings_name": "Развлечения",
+        "optional_spendings": "false"
+    },
+    {
+        "spendings_name": "Алкоголь",
+        "optional_spendings": "false"
+    },
+    {
+        "spendings_name": "Никотин",
+        "optional_spendings": "false"
+    },
+    {
+        "spendings_name": "Концерты",
+        "optional_spendings": "false"
+    },
+    {
+        "spendings_name": "Долг",
+        "optional_spendings": "true"
+    },
+    {
+        "spendings_name": "Прочие",
+        "optional_spendings": "false"
+    },
+    {
+        "spendings_name": "Дом",
+        "optional_spendings": "true"
+    },
+    {
+        "spendings_name": "Продукты",
+        "optional_spendings": "true"
+    },
+    {
+        "spendings_name": "Транспорт",
+        "optional_spendings": "true"
+    },
+    {
+        "spendings_name": "Связь и интернет",
+        "optional_spendings": "true"
+    }
+]
