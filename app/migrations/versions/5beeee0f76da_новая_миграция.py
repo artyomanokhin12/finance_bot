@@ -1,8 +1,8 @@
-"""empty message
+"""Новая миграция
 
-Revision ID: a92d0c0145d4
+Revision ID: 5beeee0f76da
 Revises: 
-Create Date: 2024-08-02 22:32:49.965318
+Create Date: 2024-08-12 19:26:28.897280
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'a92d0c0145d4'
+revision: str = '5beeee0f76da'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -35,26 +35,27 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), autoincrement=False, nullable=False),
     sa.Column('users_limit', sa.Numeric(), nullable=True),
     sa.Column('current_balance', sa.Numeric(), nullable=True),
-    sa.Column('blocked', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id')
     )
     op.create_table('incomes_bank',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_fk', sa.Integer(), nullable=False),
+    sa.Column('user_fk', sa.Integer(), nullable=True),
     sa.Column('incomes_fk', sa.Integer(), nullable=False),
+    sa.Column('amount', sa.Float(), nullable=False),
     sa.Column('operation_date', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['incomes_fk'], ['incomes.id'], ),
-    sa.ForeignKeyConstraint(['user_fk'], ['users.id'], ondelete='RESTRICT'),
+    sa.ForeignKeyConstraint(['user_fk'], ['users.id'], ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('spendings_bank',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_fk', sa.Integer(), nullable=False),
+    sa.Column('user_fk', sa.Integer(), nullable=True),
     sa.Column('spending_fk', sa.Integer(), nullable=True),
+    sa.Column('amount', sa.Float(), nullable=False),
     sa.Column('operation_date', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['spending_fk'], ['spendings.id'], ),
-    sa.ForeignKeyConstraint(['user_fk'], ['users.id'], ondelete='RESTRICT'),
+    sa.ForeignKeyConstraint(['user_fk'], ['users.id'], ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

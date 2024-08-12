@@ -21,7 +21,7 @@ async def start_command(message: Message):
     if await UsersDAO.find_by_id(message.from_user.id):
         return await message.answer(LEXICON["return"])
     else:
-        await UsersDAO.add(id=message.from_user.id)
+        await UsersDAO.add(id=message.from_user.id, current_value=0)
         return await message.answer(LEXICON["start"])
 
 
