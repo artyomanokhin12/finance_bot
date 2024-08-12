@@ -8,6 +8,7 @@ services:
       - data:/var/lib/postgresql/data
     env_file: # Файл с переменными окружения (Вместо environment)
       - .env-non-dev
+    restart: on-failure
     ports:
       - 5432:5432 # Порт нужен, только если нам нужен доступ к контейнеру напрямую
 
@@ -15,6 +16,8 @@ services:
   redis:
     image: redis:7
     container_name: finance_bot_redis
+    restart: on-failure
+    ports: "6379:6379"
   
   main:
     image: finance_bbot
