@@ -51,18 +51,22 @@ async def stat_test_command(callback: CallbackQuery, state: FSMContext):
             date_from = date.today()
             date_to = date_from + timedelta(days=1)
             prev_month = False
+            ans = f"Вывод статистики за {date_from.strftime("%d.%m.%Y")}\n"
         case "week":
             date_to = date.today() + timedelta(days=1)
             date_from = date_to - timedelta(days=7)
             prev_month = False
+            ans = f"Вывод статистики за {date_from.strftime("%d.%m.%Y")} - {(date_to - timedelta(days=1)).strftime("%d.%m.%Y")}\n"
         case "prev_month":
             date_to = date.today().replace(day=1)
             date_from = (date_to - timedelta(days=date_to.day)).replace(day=1)
             prev_month = True
+            ans = f"Вывод статистики за {date_from.strftime("%d.%m.%Y")} - {(date_to - timedelta(days=1)).strftime("%d.%m.%Y")}\n"
         case "curr_month":
             date_from = date.today().replace(day=1)
             date_to = date.today() + timedelta(days=1)
             prev_month = False
+            ans = f"Вывод статистики за {date_from.strftime("%d.%m.%Y")} - {(date_to - timedelta(days=1)).strftime("%d.%m.%Y")}\n"
 
     result = await get_stats(
         user_id=callback.from_user.id,
@@ -71,4 +75,4 @@ async def stat_test_command(callback: CallbackQuery, state: FSMContext):
         prev_month=prev_month,
     )
     await state.clear()
-    return await callback.message.answer(result)
+    return await callback.message.answer(ans + result)
