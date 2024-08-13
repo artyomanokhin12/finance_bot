@@ -54,6 +54,8 @@ async def user_income_category(callback: CallbackQuery, state: FSMContext) -> No
 async def user_new_income(message: Message, state: FSMContext):
     """Функция добавления количества денег пользователем"""
     try:
+        if message.text.startswith("-"):
+            return await message.answer(LEXICON["minus"])
         if message.text.count(",") > 0:
             user_answer = float(message.text.replace(",", ".", 1))
         else:
