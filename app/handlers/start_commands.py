@@ -51,7 +51,10 @@ async def final_input_limit(message: Message, state: FSMContext):
 
     if not message.text.isdecimal():
         return await message.answer(LEXICON["limit_wrong"])
-
+    if len(message.text) > 8:
+        return await message.answer(
+                LEXICON["big_int"]
+        )
     await state.update_data(limit=message.text)
     data = await state.get_data()
     await UsersDAO.update_by_id(

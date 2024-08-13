@@ -127,6 +127,8 @@ async def get_stats(
                 value = 0
             if key in ("Текущий баланс", "Отстаток от лимита"):
                 value = float(value)
+            if prev_month and key == "Текущий баланс":
+                continue
             result_str = result_str + f"{key}: {value}" + "\n"
 
         return result_str

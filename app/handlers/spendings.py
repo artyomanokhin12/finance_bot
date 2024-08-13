@@ -58,6 +58,10 @@ async def user_new_income(message: Message, state: FSMContext):
             user_answer = float(message.text.replace(",", ".", 1))
         else:
             user_answer = float(message.text)
+        if len(message.text) > 8:
+            return await message.answer(
+                LEXICON["big_int"]
+            )
         await state.update_data(amount=float(user_answer))
         data = await state.get_data()
         data["amount"] = round(data["amount"], 2)
