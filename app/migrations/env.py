@@ -5,9 +5,9 @@ from sqlalchemy import engine_from_config, pool
 
 from app.config import settings
 from app.database import Base
-from app.incomes.models import Incomes
+# from app.incomes.models import Incomes
 from app.incomes_bank.models import IncomesBank
-from app.spendings.models import Spendings
+# from app.spendings.models import Spendings
 from app.spendings_bank.models import SpendingsBank
 from app.users.models import Users
 

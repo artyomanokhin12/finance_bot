@@ -1,66 +1,66 @@
 [
     {
-        "spendings_name": "Кафе",
-        "optional_spendings": "false"
+        "spending_name": "Кафе",
+        "optional_spending": false
     },
     {
-        "spendings_name": "Бар",
-        "optional_spendings": "false"
+        "spending_name": "Бар",
+        "optional_spending": false
     },
     {
-        "spendings_name": "Здоровье",
-        "optional_spendings": "true"
+        "spending_name": "Здоровье",
+        "optional_spending": true
     },
     {
-        "spendings_name": "Такси",
-        "optional_spendings": "false"
+        "spending_name": "Такси",
+        "optional_spending": false
     },
     {
-        "spendings_name": "Книги",
-        "optional_spendings": "false"
+        "spending_name": "Книги",
+        "optional_spending": false
     },
     {
-        "spendings_name": "Подписки",
-        "optional_spendings": "false"
+        "spending_name": "Подписки",
+        "optional_spending": false
     },
     {
-        "spendings_name": "Развлечения",
-        "optional_spendings": "false"
+        "spending_name": "Развлечения",
+        "optional_spending": false
     },
     {
-        "spendings_name": "Алкоголь",
-        "optional_spendings": "false"
+        "spending_name": "Алкоголь",
+        "optional_spending": false
     },
     {
-        "spendings_name": "Никотин",
-        "optional_spendings": "false"
+        "spending_name": "Никотин",
+        "optional_spending": false
     },
     {
-        "spendings_name": "Концерты",
-        "optional_spendings": "false"
+        "spending_name": "Концерты",
+        "optional_spending": false
     },
     {
-        "spendings_name": "Долг",
-        "optional_spendings": "true"
+        "spending_name": "Долг",
+        "optional_spending": true
     },
     {
-        "spendings_name": "Прочие",
-        "optional_spendings": "false"
+        "spending_name": "Прочие",
+        "optional_spending": false
     },
     {
-        "spendings_name": "Дом",
-        "optional_spendings": "true"
+        "spending_name": "Дом",
+        "optional_spending": true
     },
     {
-        "spendings_name": "Продукты",
-        "optional_spendings": "true"
+        "spending_name": "Продукты",
+        "optional_spending": true
     },
     {
-        "spendings_name": "Транспорт",
-        "optional_spendings": "true"
+        "spending_name": "Транспорт",
+        "optional_spending": true
     },
     {
-        "spendings_name": "Связь и интернет",
-        "optional_spendings": "true"
+        "spending_name": "Связь и интернет",
+        "optional_spending": true
     }
 ]

@@ -5,7 +5,7 @@ VALUES
     ('В долг'),
     ('Прочие');
 
-INSERT INTO spendings (spendings_name, optional_spending)
+INSERT INTO spendings (spending_name, optional_spending)
 VALUES
     ('Кафе', 'false'),
     ('Бар', 'false'),
