@@ -35,7 +35,7 @@ async def main():
 
 if __name__ == "__main__":
     try:
-        setup_logger("INFO", ["sqlalchemy.engine", "aiogram.bot.api"])
+        setup_logger("INFO")
         asyncio.run(main())
     except (KeyboardInterrupt, SystemError):
         print("Бот был остановлен")

@@ -4,3 +4,4 @@ alembic.ini
 **/__pycache__
 app/handlers/test_handlers.py
 test.py
+debug.log
