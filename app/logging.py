@@ -8,7 +8,7 @@ class InterceptHandler(logging.Handler):
     def emit(self, record):
         # Get corresponding Loguru level if it exists
         try:
-            logger.add("debug.log")
+            logger.add("app/debug.log")
             level = logger.level(record.levelname).name
         except ValueError:
             level = record.levelno
