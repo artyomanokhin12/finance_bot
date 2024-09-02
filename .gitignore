@@ -5,3 +5,5 @@ alembic.ini
 app/handlers/test_handlers.py
 test.py
 debug.log
+.env-non-dev
+
