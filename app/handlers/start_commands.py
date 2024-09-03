@@ -14,7 +14,7 @@ from app.users.dao import UsersDAO
 router = Router()
 
 
-@router.message(CommandStart())
+@router.message(CommandStart(), StateFilter(default_state))
 async def start_command(message: Message):
     """Функция старта пользования ботом"""
 

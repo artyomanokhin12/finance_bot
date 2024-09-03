@@ -1,4 +1,5 @@
 import asyncio
+from loguru import logger
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import Redis, RedisStorage
@@ -10,7 +11,8 @@ from app.handlers.other_handlers import router as other_router
 from app.handlers.spendings import router as spendings_router
 from app.handlers.start_commands import router as start_router
 from app.handlers.statistics import router as stat_router
-from app.logging import setup_logger
+from app.handlers.savings import router as saving_router
+# from app.logging import setup_logger
 from app.menu import set_main_menu
 
 
@@ -26,6 +28,7 @@ async def main():
     dp.include_router(router=incomes_router)
     dp.include_router(router=stat_router)
     dp.include_router(router=start_router)
+    dp.include_router(router=saving_router)
     dp.include_router(router=other_router)
 
     await set_main_menu(bot)
@@ -35,7 +38,8 @@ async def main():
 
 if __name__ == "__main__":
     try:
-        setup_logger("INFO")
+        # setup_logger("INFO")
+        logger.add("test_debug.log")
         asyncio.run(main())
     except (KeyboardInterrupt, SystemError):
         print("Бот был остановлен")

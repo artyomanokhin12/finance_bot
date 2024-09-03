@@ -10,6 +10,7 @@ from app.incomes_bank.models import IncomesBank
 # from app.spendings.models import Spendings
 from app.spendings_bank.models import SpendingsBank
 from app.users.models import Users
+from app.saving.models import UsersSaving
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

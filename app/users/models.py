@@ -4,6 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from app.incomes_bank.models import IncomesBank
 from app.spendings_bank.models import SpendingsBank
+from app.saving.models import UsersSaving
 
 
 class Users(Base):
@@ -17,6 +18,7 @@ class Users(Base):
 
     spendings_bank: Mapped[list["SpendingsBank"]] = relationship()
     incomes_bank: Mapped[list["IncomesBank"]] = relationship()
+    savings: Mapped[list["UsersSaving"]] = relationship()
 
     def __repr__(self):
         return f"User={self.id}"

@@ -26,3 +26,20 @@ class FSMState(StatesGroup):
 class FSMReset(StatesGroup):
 
     confirmation = State()
+
+
+class FSMSaving(StatesGroup):
+
+    goal_name = State()
+    amount = State()
+
+
+class FSMSavingDelete(StatesGroup):
+
+    choose_goal = State()
+
+
+class FSMSavingAction(StatesGroup):
+
+    choose_goal = State()
+    input_money = State()
