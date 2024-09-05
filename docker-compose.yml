@@ -1,35 +1,39 @@
-version: "3.7"
+version: "3"
 services:
 
-  db:
-    image: postgres:15
+  postgres:
+    image: postgres:16
     container_name: finance_bot_postgres
     volumes:
-      - ./data:/var/lib/postgresql/data
-      - ./001.sql:/docker-entrypoint-initdb.d/001.sql
-      - ./db.sql:/docker-entrypoint-initdb.d/db.sql
+      - data:/var/lib/postgresql/data
+      - ./db.sql:/app/db.sql
     env_file: # Файл с переменными окружения (Вместо environment)
-      - .env-non-dev
-    restart: on-failure
-    ports:
-      - 5432:5432 # Порт нужен, только если нам нужен доступ к контейнеру напрямую
-
+      - .env-db
+    restart: always
+    
   redis:
     image: redis:7
     container_name: finance_bot_redis
-    restart: on-failure
-    ports: 
-      - 6379:6379
-  
+    restart: always
+    volumes:
+      - redis:/var/lib/redis
+    
   main:
-    image: finance_bbot
-    build: 
-      context: .
-    container_name: finance_bbot
+    build: .
+    container_name: finance_bot
     env_file:
-      - .env-non-dev
+      - .env
     depends_on:
-      - db
+      - postgres
       - redis
+    restart: always
     command: ["/bot/docker_run.sh"]
 
+  adminer:
+    image: adminer
+    ports:
+      - '8888:8080'
+
+volumes:
+  data:
+  redis:
